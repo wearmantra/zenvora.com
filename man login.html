@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Zenvora | Login, Register & OTP Verify</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif;}
+    body{background:#111;color:#fff;overflow-x:hidden;}
+
+    /* Background aesthetic coffee mug */
+    body::before{
+      content:"";
+      position:fixed;top:0;left:0;width:100%;height:100%;
+      background:url('https://images.unsplash.com/photo-1511920170033-f8396924c348?auto=format&fit=crop&w=1600&q=80') no-repeat center/cover;
+      z-index:-2;filter:blur(5px);
+    }
+    body::after{
+      content:"";
+      position:fixed;top:0;left:0;width:100%;height:100%;
+      background:rgba(0,0,0,0.65);
+      z-index:-1;
+    }
+
+    /* Loading Screen with spinner */
+    #loading-screen{
+      position:fixed;top:0;left:0;width:100%;height:100%;
+      background:#111;display:flex;justify-content:center;align-items:center;
+      color:#fff;font-size:24px;z-index:9999;flex-direction:column;
+    }
+    .spinner{
+      border:6px solid rgba(255,255,255,0.2);
+      border-top:6px solid #fdc830;
+      border-radius:50%;
+      width:60px;
+      height:60px;
+      animation:spin 1s linear infinite;
+      margin-bottom:15px;
+    }
+    @keyframes spin{
+      0%{transform:rotate(0deg);}
+      100%{transform:rotate(360deg);}
+    }
+
+    /* Top Bar */
+    .top-bar{background:rgba(255,255,255,0.1);backdrop-filter:blur(6px);padding:8px 20px;font-size:14px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(255,255,255,0.15);}
+    .top-left,.top-right{display:flex;align-items:center;gap:8px;}
+    .top-right{gap:15px;}
+    .top-bar a{text-decoration:none;color:#fff;display:flex;align-items:center;gap:5px;transition:.3s;}
+    .top-bar a:hover{color:#fdc830;}
+
+    /* Logo */
+    .logo{text-align:center;padding:25px 0;}
+    .logo h1{font-size:42px;font-weight:bold;color:#fff;letter-spacing:2px;}
+    .logo span{color:#fdc830;}
+
+    /* Navigation */
+    nav{background:rgba(255,255,255,0.08);backdrop-filter:blur(6px);border-top:1px solid rgba(255,255,255,0.15);border-bottom:1px solid rgba(255,255,255,0.15);}
+    nav ul{list-style:none;display:flex;justify-content:center;flex-wrap:wrap;}
+    nav li{border-left:1px solid rgba(255,255,255,0.15);}
+    nav li:first-child{border-left:none;}
+    nav a{display:block;padding:14px 22px;text-decoration:none;color:#fff;font-size:14px;transition:.3s;letter-spacing:1px;}
+    nav a:hover{background:#fdc830;color:#000;}
+    .menu-toggle{display:none;font-size:26px;cursor:pointer;padding:14px;background:transparent;border:none;color:#fff;}
+    @media(max-width:768px){
+      nav ul{flex-direction:column;display:none;}
+      nav ul.active{display:flex;}
+      nav li{border:none;border-bottom:1px solid rgba(255,255,255,0.15);}
+      .menu-toggle{display:block;width:100%;border-bottom:1px solid rgba(255,255,255,0.15);}
+    }
+
+    /* Section Title */
+    .divider{height:2px;background:linear-gradient(to right,transparent,#fdc830,transparent);margin:25px auto;width:80%;}
+    .section-title{text-align:center;font-size:28px;letter-spacing:2px;margin:20px 0;font-weight:bold;color:#fff;text-transform:uppercase;}
+
+    /* Auth Container */
+    .auth-container{max-width:420px;margin:40px auto;background:rgba(255,255,255,0.1);padding:35px 30px;border-radius:20px;box-shadow:0 8px 32px rgba(0,0,0,0.5);backdrop-filter:blur(12px);animation:fadeUp 1s ease; display:none;}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(40px);}to{opacity:1;transform:translateY(0);}}
+
+    .tab-buttons{display:flex;margin-bottom:25px;border-radius:10px;overflow:hidden;}
+    .tab-buttons button{flex:1;padding:12px;font-size:16px;border:none;cursor:pointer;background:rgba(255,255,255,0.15);transition:.3s;font-weight:600;color:#fff;}
+    .tab-buttons button.active{background:linear-gradient(135deg,#fdc830,#f37335);color:#000;}
+    .auth-form{display:none;}
+    .auth-form.active{display:block;animation:fadeIn .6s ease;}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(15px);}to{opacity:1;transform:translateY(0);}}
+
+    .auth-form input{width:100%;padding:12px;margin-bottom:15px;border:1px solid rgba(255,255,255,0.3);border-radius:8px;font-size:15px;background:rgba(255,255,255,0.12);color:#fff;transition:0.3s;}
+    .auth-form input::placeholder{color:#ddd;}
+    .auth-form input:focus{border-color:#fdc830;box-shadow:0 0 8px #fdc830aa;outline:none;background:rgba(255,255,255,0.18);}
+
+    .auth-form button{width:100%;background:linear-gradient(135deg,#f37335,#fdc830);color:#000;padding:12px;border:none;border-radius:8px;font-size:16px;font-weight:600;cursor:pointer;transition:.3s;}
+    .auth-form button:hover{transform:translateY(-2px);box-shadow:0 5px 15px rgba(253,200,48,0.5);}
+    .form-footer{text-align:center;margin-top:15px;font-size:14px;}
+    .form-footer a{color:#fdc830;text-decoration:none;font-weight:600;}
+    .form-footer a:hover{text-decoration:underline;}
+  </style>
+</head>
+<body>
+
+  <!-- Loading Screen -->
+  <div id="loading-screen">
+    <div class="spinner"></div>
+    Loading... Please wait (15s)
+  </div>
+
+  <!-- Top Bar -->
+  <div class="top-bar">
+    <div class="top-left"><i class="fas fa-phone-alt"></i> <span>6264536204</span></div>
+    <div class="top-right">
+      <a href="login.html"><i class="fas fa-sign-in-alt"></i> Login</a>
+      <a href="cart.html"><i class="fas fa-shopping-cart"></i> Cart (0)</a>
+      <a href="checkout.html"><i class="fas fa-credit-card"></i> Checkout</a>
+    </div>
+  </div>
+
+  <!-- Logo -->
+  <div class="logo">
+    <a href="index.html" style="text-decoration:none;color:inherit;">
+      <h1>ZENV<span>ORA</span></h1>
+    </a>
+  </div>
+
+  <!-- Navigation -->
+  <nav>
+    <button class="menu-toggle" onclick="toggleMenu()"><i class="fas fa-bars"></i> Menu</button>
+    <ul>
+      <li><a href="#">Products</a></li>
+      <li><a href="#">Custom Prints</a></li>
+      <li><a href="#">How It Works</a></li>
+      <li><a href="#">Bulk Orders</a></li>
+      <li><a href="#">FAQ</a></li>
+      <li><a href="#">Design Ideas</a></li>
+      <li><a href="contact.html">Contact Us</a></li>
+    </ul>
+  </nav>
+
+  <!-- Title -->
+  <div class="divider"></div>
+  <div class="section-title">Login / Register / OTP Verify</div>
+  <div class="divider"></div>
+
+  <!-- Auth Forms -->
+  <div class="auth-container">
+    <div class="tab-buttons">
+      <button class="active" onclick="showForm('login')">Login</button>
+      <button onclick="showForm('register')">Register</button>
+      <button onclick="showForm('forgot')">Forgot Password</button>
+    </div>
+
+    <!-- Login Form -->
+    <form class="auth-form active" id="login-form" onsubmit="return handleLogin(event)">
+      <input type="email" id="login-email" placeholder="Email Address" required>
+      <input type="password" id="login-pass" placeholder="Password" required>
+      <button type="submit">Login</button>
+    </form>
+
+    <!-- Register Form -->
+    <form class="auth-form" id="register-form" onsubmit="return handleRegister(event)">
+      <input type="text" placeholder="Full Name" required>
+      <input type="email" id="reg-email" placeholder="Email Address" required>
+      <input type="password" id="reg-pass" placeholder="Password" required>
+      <input type="password" placeholder="Confirm Password" required>
+      <button type="submit">Register</button>
+    </form>
+
+    <!-- OTP Form -->
+    <form class="auth-form" id="otp-form" onsubmit="return verifyOtp(event)">
+      <input type="text" id="otp-input" placeholder="Enter OTP (123456)" required>
+      <button type="submit">Verify OTP</button>
+      <div class="form-footer"><a href="#" onclick="showForm('register')">Back to Register</a></div>
+    </form>
+
+    <!-- Forgot Password Form -->
+    <form class="auth-form" id="forgot-form" onsubmit="return handleForgot(event)">
+      <input type="email" placeholder="Enter your registered email" required>
+      <button type="submit">Send Reset Link</button>
+      <div class="form-footer"><a href="#" onclick="showForm('login')">Back to Login</a></div>
+    </form>
+  </div>
+
+  <script>
+    let users = []; // demo "database"
+    let tempUser = null;
+
+    function toggleMenu(){
+      document.querySelector('nav ul').classList.toggle('active');
+    }
+    function showForm(type){
+      document.querySelectorAll('.tab-buttons button').forEach(btn=>btn.classList.remove('active'));
+      document.querySelectorAll('.auth-form').forEach(form=>form.classList.remove('active'));
+      if(type==='login'){
+        document.querySelector('#login-form').classList.add('active');
+        document.querySelector('.tab-buttons button:nth-child(1)').classList.add('active');
+      }else if(type==='register'){
+        document.querySelector('#register-form').classList.add('active');
+        document.querySelector('.tab-buttons button:nth-child(2)').classList.add('active');
+      }else if(type==='forgot'){
+        document.querySelector('#forgot-form').classList.add('active');
+        document.querySelector('.tab-buttons button:nth-child(3)').classList.add('active');
+      }else if(type==='otp'){
+        document.querySelector('#otp-form').classList.add('active');
+      }
+    }
+
+    function handleLogin(e){
+      e.preventDefault();
+      const email=document.getElementById("login-email").value;
+      const pass=document.getElementById("login-pass").value;
+      const user=users.find(u=>u.email===email && u.password===pass);
+      if(user){
+        alert("Login Successful!");
+        window.location.href="index.html";
+      }else{
+        alert("Invalid Email or Password!");
+      }
+    }
+    function handleRegister(e){
+      e.preventDefault();
+      const email=document.getElementById("reg-email").value;
+      const pass=document.getElementById("reg-pass").value;
+      tempUser={email:email,password:pass};
+      alert("OTP sent to your email (demo OTP: 123456)");
+      showForm('otp');
+    }
+    function verifyOtp(e){
+      e.preventDefault();
+      const otp=document.getElementById("otp-input").value;
+      if(otp==="123456" && tempUser){
+        users.push(tempUser);
+        alert("Registration Successful!");
+        tempUser=null;
+        showForm('login');
+      }else{
+        alert("Invalid OTP. Please try again.");
+      }
+    }
+    function handleForgot(e){
+      e.preventDefault();
+      alert("Password reset link sent to your email!");
+      showForm('login');
+    }
+
+    // 15 second loading with spinner
+    window.addEventListener('load', ()=>{
+      setTimeout(()=>{
+        document.getElementById('loading-screen').style.display = 'none';
+        document.querySelector('.auth-container').style.display = 'block';
+      }, 15000); // 15s
+    });
+  </script>
+</body>
+</html>

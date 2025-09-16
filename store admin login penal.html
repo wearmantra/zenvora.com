@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zenvora | Admin Panel</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: #f3f3f3;
+        padding: 20px;
+    }
+    h1 {
+        color: #6a11cb;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 15px;
+        background: white;
+    }
+    th, td {
+        padding: 10px;
+        border: 1px solid #ccc;
+        text-align: left;
+    }
+    button {
+        padding: 6px 10px;
+        border: none;
+        cursor: pointer;
+        border-radius: 4px;
+    }
+    .approve { background: #4CAF50; color: white; }
+    .reject { background: #f44336; color: white; }
+</style>
+</head>
+<body>
+
+<h1>Zenvora Admin Panel</h1>
+<table>
+    <thead>
+        <tr>
+            <th>Name</th><th>Email</th><th>Status</th><th>Action</th>
+        </tr>
+    </thead>
+    <tbody id="adminList"></tbody>
+</table>
+
+<script>
+function loadAdmins() {
+    let admins = JSON.parse(localStorage.getItem("admins") || "[]");
+    let tbody = document.getElementById("adminList");
+    tbody.innerHTML = "";
+    admins.forEach((admin, index) => {
+        tbody.innerHTML += `
+            <tr>
+                <td>${admin.name}</td>
+                <td>${admin.email}</td>
+                <td>${admin.status}</td>
+                <td>
+                    <button class="approve" onclick="approve(${index})">Approve</button>
+                    <button class="reject" onclick="reject(${index})">Reject</button>
+                </td>
+            </tr>
+        `;
+    });
+}
+
+function approve(index) {
+    let admins = JSON.parse(localStorage.getItem("admins") || "[]");
+    admins[index].status = "approved";
+    localStorage.setItem("admins", JSON.stringify(admins));
+    loadAdmins();
+}
+
+function reject(index) {
+    let admins = JSON.parse(localStorage.getItem("admins") || "[]");
+    admins[index].status = "rejected";
+    localStorage.setItem("admins", JSON.stringify(admins));
+    loadAdmins();
+}
+
+loadAdmins();
+</script>
+
+</body>
+</html>

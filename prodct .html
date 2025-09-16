@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Zenvora | Products</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI',sans-serif;}
+    body { background:#fafafa; color:#333; line-height:1.6;}
+
+    /* Top Bar */
+    .top-bar { 
+      background:#1e1f26; 
+      padding:8px 20px; 
+      font-size:14px; 
+      display:flex; 
+      justify-content:space-between; 
+      align-items:center; 
+      color:#fff;
+      position:fixed;
+      top:0;
+      left:0;
+      right:0;
+      z-index:1100;
+    }
+    .top-left, .top-right { display:flex; align-items:center; gap:15px;}
+    .top-bar a { text-decoration:none; color:#fff; display:flex; align-items:center; gap:6px; transition:0.3s;}
+    .top-bar a:hover { color:#fdc830;}
+
+    /* Navigation with Logo */
+    nav { 
+      background:#fff; 
+      border-bottom:1px solid #eee; 
+      position:fixed; 
+      top:38px; 
+      left:0; 
+      right:0; 
+      z-index:1000;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      padding:10px 20px;
+      box-shadow:0 2px 5px rgba(0,0,0,0.08);
+    }
+    .nav-logo h1 { font-size:28px; font-weight:800; color:#1e1f26; letter-spacing:1px; margin:0;}
+    .nav-logo span { color:#fdc830;}
+    nav ul { list-style:none; display:flex; gap:20px; }
+    nav a { display:block; text-decoration:none; color:#333; letter-spacing:1px; font-size:15px; font-weight:500; transition:0.3s;}
+    nav a:hover { color:#f37335;}
+    .menu-toggle { display:none; font-size:24px; cursor:pointer; background:none; border:none; }
+
+    @media (max-width:768px) {
+      nav { flex-wrap:wrap; }
+      nav ul { flex-direction:column; width:100%; display:none; margin-top:10px;}
+      nav ul.active { display:flex; }
+      nav ul li { text-align:center; padding:8px 0; border-top:1px solid #eee;}
+      .menu-toggle { display:block; color:#333;}
+    }
+
+    /* Hero Section */
+    .hero { 
+      background:url('https://images.unsplash.com/photo-1557682250-33bd709cbe85?ixlib=rb-4.0.3&auto=format&fit=crop&w=1400&q=80') no-repeat center/cover; 
+      color:#fff; 
+      text-align:center; 
+      padding:80px 20px; 
+      position:relative; 
+      margin-top:120px;
+    }
+    .hero::after { content:""; position:absolute; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.55);}
+    .hero-content { position:relative; z-index:2; max-width:700px; margin:auto;}
+    .hero h2 { font-size:38px; font-weight:700; margin-bottom:15px;}
+    .hero p { font-size:18px; margin-bottom:25px; opacity:0.9;}
+
+    /* Section Titles */
+    .section-title { text-align:center; font-size:26px; font-weight:600; letter-spacing:2px; margin:50px 0 30px; color:#1e1f26;}
+    .divider { height:2px; background:linear-gradient(90deg,#fdc830,#f37335); margin:20px auto; width:120px; border-radius:4px;}
+
+    /* Products Grid */
+    .products { 
+      max-width:1200px; 
+      margin:40px auto 80px; 
+      display:grid; 
+      grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); 
+      gap:20px; 
+      padding:0 20px;
+    }
+    .card { 
+      background:#fff; 
+      border-radius:20px; 
+      overflow:hidden; 
+      box-shadow:0 8px 20px rgba(0,0,0,0.1); 
+      transition:0.3s;
+    }
+    .card img { 
+      width:100%; 
+      height:300px; 
+      object-fit:cover; 
+      transition:0.3s;
+      display:block;
+    }
+    .card:hover img { transform:scale(1.05); }
+
+    /* Mobile-specific adjustments */
+    @media (max-width:500px) {
+      .products { grid-template-columns:repeat(2,1fr); gap:12px; }
+      .card img { height:150px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Bar -->
+  <div class="top-bar">
+    <div class="top-left"><i class="fas fa-phone-alt"></i> <span>6264536204</span></div>
+    <div class="top-right">
+      <a href="cart.html"><i class="fas fa-shopping-cart"></i> Cart (0)</a>
+      <a href="checkout.html"><i class="fas fa-credit-card"></i> Checkout</a>
+    </div>
+  </div>
+
+  <!-- Navigation with Logo -->
+  <nav>
+    <div class="nav-logo">
+      <a href="index.html" style="text-decoration:none; color:inherit;">
+        <h1>ZENV<span>ORA</span></h1>
+      </a>
+    </div>
+    <button class="menu-toggle"><i class="fas fa-bars"></i></button>
+    <ul>
+      <li><a href="#">Products</a></li>
+      <li><a href="#">Custom Prints</a></li>
+      <li><a href="#">How It Works</a></li>
+      <li><a href="#">Bulk Orders</a></li>
+      <li><a href="#">FAQ</a></li>
+      <li><a href="#">Design Ideas</a></li>
+      <li><a href="#">Contact Us</a></li>
+    </ul>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-content">
+      <h2>Welcome to Zenvora</h2>
+      <p>Explore our premium collection of custom products</p>
+    </div>
+  </section>
+
+  <!-- Products -->
+  <div class="section-title">OUR TOP PRODUCTS</div>
+  <div class="divider"></div>
+  <div class="products">
+    <div class="card">
+      <img src="https://www.dudeme.in/cdn/shop/products/Declare-variables-MELANGE.jpg?v=1661775148&width=600" alt="Custom T-Shirt">
+    </div>
+    <div class="card">
+      <img src="https://www.dudeme.in/cdn/shop/products/1st-Rule-NAVY.jpg?v=1661942569&width=600" alt="Photo Frame">
+    </div>
+    <div class="card">
+      <img src="https://printo-s3.dietpixels.net/site/T-shirts/Premium%20cotton%20classic%20t%20shirt/1_1752704830.jpg?quality=70&format=webp&w=640" alt="Mobile Case">
+    </div>
+    <div class="card">
+      <img src="https://printo-s3.dietpixels.net/Rare-Rabbit-Round-Neck-T-shirts_1752573802.jpg?quality=70&format=webp&w=640" alt="Customized Chain">
+    </div>
+    <div class="card">
+      <img src="https://printo-s3.dietpixels.net/site/T-shirts/App_1753334972.png?quality=70&format=webp&w=640" alt="Custom T-Shirt">
+    </div>
+    <div class="card">
+      <img src="https://printo-s3.dietpixels.net/Awa_1754231245.jpg?quality=70&format=webp&w=640" alt="Photo Frame">
+    </div>
+    <div class="card">
+      <img src="https://printo-s3.dietpixels.net/Corporate-gifts_1754033787.jpg?quality=70&format=webp&w=640" alt="Mobile Case">
+    </div>
+    <div class="card">
+      <img src="https://printo-s3.dietpixels.net/Drinkware_1754033693.jpg?quality=70&format=webp&w=640" alt="Customized Chain">
+    </div>
+     <div class="card">
+      <img src="https://printo-s3.dietpixels.net/Photo_1754231245.jpg?quality=70&format=webp&w=640" alt="Custom T-Shirt">
+    </div>
+    <div class="card">
+      <img src="https://printo-s3.dietpixels.net/1v_1754230303.jpg?quality=70&format=webp&w=640" alt="Photo Frame">
+    </div>
+    <div class="card">
+      <img src="https://printo-s3.dietpixels.net/site/20220714_094015936952_f70ab0_Product_11.jpg?quality=70&format=webp&w=640" alt="Mobile Case">
+    </div>
+    <div class="card">
+      <img src="https://cms.cloudinary.vpsvc.com/image/upload/c_scale,dpr_auto,f_auto,q_auto:best,t_productPageHeroGalleryTransformation_v2,w_auto/India%20LOB/Photo%20Gifts/Photo%20Albums/IN_Photo-album_Hero-image_01" alt="Customized Chain">
+    </div>
+  </div>
+
+  <script>
+    // Mobile menu toggle
+    document.querySelector('.menu-toggle').addEventListener('click', () => {
+      document.querySelector('nav ul').classList.toggle('active');
+    });
+  </script>
+</body>
+</html>

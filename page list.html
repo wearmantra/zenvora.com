@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Zenvora | Page List</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    body {
+      background: #fafafa;
+      color: #333;
+      line-height: 1.6;
+    }
+
+    /* Top Info Bar */
+    .top-bar {
+      background: #1e1f26;
+      padding: 8px 20px;
+      font-size: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: #fff;
+    }
+
+    .top-left, .top-right {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .top-bar a {
+      text-decoration: none;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: 0.3s;
+    }
+
+    .top-bar a:hover {
+      color: #fdc830;
+    }
+
+    /* Logo */
+    .logo {
+      text-align: center;
+      padding: 30px 0 20px;
+    }
+
+    .logo h1 {
+      font-size: 46px;
+      font-weight: 800;
+      color: #1e1f26;
+      letter-spacing: 2px;
+    }
+
+    .logo span {
+      color: #fdc830;
+    }
+
+    /* Navigation */
+    nav {
+      background: #fff;
+      border-top: 1px solid #eee;
+      border-bottom: 1px solid #eee;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    nav li {
+      border-left: 1px solid #eee;
+    }
+
+    nav li:first-child {
+      border-left: none;
+    }
+
+    nav a {
+      display: block;
+      padding: 15px 26px;
+      text-decoration: none;
+      color: #333;
+      letter-spacing: 1px;
+      font-size: 15px;
+      font-weight: 500;
+      transition: 0.3s;
+    }
+
+    nav a:hover {
+      background: linear-gradient(45deg, #fdc830, #f37335);
+      color: #fff;
+    }
+
+    /* Mobile Menu */
+    .menu-toggle {
+      display: none;
+      font-size: 24px;
+      cursor: pointer;
+      padding: 14px;
+      background: #fff;
+      border: none;
+      border-bottom: 1px solid #eee;
+    }
+
+    @media (max-width: 768px) {
+      nav ul {
+        flex-direction: column;
+        display: none;
+      }
+      nav ul.active {
+        display: flex;
+      }
+      nav li {
+        border-left: none;
+        border-bottom: 1px solid #eee;
+      }
+      .menu-toggle {
+        display: block;
+        width: 100%;
+        text-align: left;
+      }
+    }
+
+    /* Hero Section */
+    .hero {
+      background: url('https://images.unsplash.com/photo-1557682250-33bd709cbe85?ixlib=rb-4.0.3&auto=format&fit=crop&w=1400&q=80') no-repeat center/cover;
+      color: #fff;
+      text-align: center;
+      padding: 100px 20px;
+      position: relative;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.55);
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 700px;
+      margin: auto;
+    }
+
+    .hero h2 {
+      font-size: 38px;
+      font-weight: 700;
+      margin-bottom: 15px;
+    }
+
+    .hero p {
+      font-size: 18px;
+      opacity: 0.9;
+    }
+
+    /* Table Section */
+    .list-section {
+      max-width: 1000px;
+      margin: 40px auto;
+      padding: 20px;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    .list-section h3 {
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: 22px;
+      color: #1e1f26;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    table th, table td {
+      border: 1px solid #ddd;
+      padding: 12px;
+      text-align: center;
+      font-size: 14px;
+    }
+
+    table th {
+      background: #1e1f26;
+      color: #fff;
+    }
+
+    table tr:nth-child(even) {
+      background: #f9f9f9;
+    }
+
+  </style>
+  <script>
+    function toggleMenu() {
+      document.querySelector('nav ul').classList.toggle('active');
+    }
+  </script>
+</head>
+<body>
+
+  <!-- Top Bar -->
+  <div class="top-bar">
+    <div class="top-left">
+      <i class="fas fa-phone-alt"></i> <span>6264536204</span>
+    </div>
+    <div class="top-right">
+      <a href="cart.html"><i class="fas fa-shopping-cart"></i> Cart (0)</a>
+      <a href="checkout.html"><i class="fas fa-credit-card"></i> Checkout</a>
+    </div>
+  </div>
+
+  <!-- Logo -->
+  <div class="logo">
+    <a href="index.html" style="text-decoration:none; color:inherit;">
+      <h1>ZENV<span>ORA</span></h1>
+    </a>
+  </div>
+
+  <!-- Navigation -->
+  <nav>
+    <button class="menu-toggle" onclick="toggleMenu()"><i class="fas fa-bars"></i> Menu</button>
+    <ul>
+      <li><a href="prodct.html">Products</a></li>
+      <li><a href="#">Custom Prints</a></li>
+      <li><a href="#">How It Works</a></li>
+      <li><a href="#">Bulk Orders</a></li>
+      <li><a href="#">FAQ</a></li>
+      <li><a href="#">Design Ideas</a></li>
+      <li><a href="#">Contact Us</a></li>
+    </ul>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-content">
+      <h2>Welcome to Zenvora</h2>
+      <p>Your one-stop solution for premium custom prints & group store management</p>
+    </div>
+  </section>
+
+  <!-- Page Update List -->
+  <section class="list-section">
+    <h3>📋 Page Update List</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Priority</th>
+          <th>Due Date</th>
+          <th>Description</th>
+          <th>Person</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>High</td>
+          <td>2025-09-20</td>
+          <td>Home Page Banner Update</td>
+          <td>Yash</td>
+          <td>Pending</td>
+        </tr>
+        <tr>
+          <td>Medium</td>
+          <td>2025-09-22</td>
+          <td>Product Page Redesign</td>
+          <td>Rahul</td>
+          <td>In Progress</td>
+        </tr>
+        <tr>
+          <td>Low</td>
+          <td>2025-09-25</td>
+          <td>FAQ Page Content</td>
+          <td>Amit</td>
+          <td>Not Started</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+</body>
+</html>

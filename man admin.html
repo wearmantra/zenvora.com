@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Zenvora | Admin Panel</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+    body { background: #f4f6f9; color: #333; }
+
+    /* Sidebar */
+    .sidebar {
+      position: fixed; top: 0; left: 0; bottom: 0;
+      width: 240px; background: #1e1f26; color: #fff;
+      padding-top: 20px; transition: 0.3s;
+    }
+    .sidebar h2 { text-align: center; font-size: 24px; margin-bottom: 30px; letter-spacing: 2px; }
+    .sidebar h2 span { color: #fdc830; }
+    .sidebar ul { list-style: none; }
+    .sidebar li { border-bottom: 1px solid rgba(255,255,255,0.1); }
+    .sidebar a {
+      display: block; padding: 15px 20px; color: #fff; text-decoration: none; transition: 0.3s;
+    }
+    .sidebar a:hover { background: linear-gradient(45deg, #fdc830, #f37335); }
+
+    /* Main */
+    .main { margin-left: 240px; padding: 30px; }
+    .main h1 { font-size: 28px; margin-bottom: 20px; }
+
+    .cards {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px; margin-bottom: 30px;
+    }
+    .card {
+      background: #fff; padding: 20px; border-radius: 12px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+      text-align: center; transition: 0.3s;
+    }
+    .card:hover { transform: translateY(-5px); }
+    .card i { font-size: 30px; margin-bottom: 10px; color: #f37335; }
+    .card h3 { font-size: 18px; margin-bottom: 8px; }
+    .card p { font-size: 14px; color: #555; }
+
+    /* Sections */
+    .section {
+      background: #fff; padding: 20px; border-radius: 12px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08); margin-bottom: 30px;
+    }
+    .section h2 { font-size: 20px; margin-bottom: 15px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+    table th, table td { padding: 12px 10px; border-bottom: 1px solid #eee; text-align: left; }
+    table th { background: #f8f8f8; }
+    .credit { color: green; font-weight: 600; }
+    .debit { color: red; font-weight: 600; }
+
+    /* Forms */
+    .form-group { margin-bottom: 15px; }
+    .form-group label { display: block; font-weight: bold; margin-bottom: 6px; }
+    .form-group input, .form-group select, .form-group textarea {
+      width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 8px;
+    }
+    .form-group textarea { resize: none; height: 80px; }
+    .btn {
+      background: linear-gradient(45deg, #fdc830, #f37335);
+      border: none; color: #fff; padding: 10px 16px;
+      border-radius: 8px; cursor: pointer; font-size: 14px; transition: 0.3s;
+    }
+    .btn:hover { opacity: 0.9; }
+
+    @media (max-width: 768px) {
+      .sidebar { width: 200px; }
+      .main { margin-left: 200px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <h2>ZENV<span>ORA</span></h2>
+    <ul>
+      <li><a href="#"><i class="fas fa-home"></i> Dashboard</a></li>
+      <li><a href="#"><i class="fas fa-box"></i> Orders</a></li>
+      <li><a href="#"><i class="fas fa-credit-card"></i> Payments</a></li>
+      <li><a href="#"><i class="fas fa-users"></i> Customers</a></li>
+      <li><a href="prodct .html"><i class="fas fa-tshirt"></i> Products</a></li>
+      <li><a href="#"><i class="fas fa-cog"></i> Settings</a></li>
+      <li><a href="index.html"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+    </ul>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main">
+    <h1>Admin Dashboard</h1>
+
+    <!-- Summary -->
+    <div class="cards">
+      <div class="card">
+        <i class="fas fa-box"></i>
+        <h3>Total Orders</h3>
+        <p id="totalOrders">3</p>
+      </div>
+      <div class="card">
+        <i class="fas fa-credit-card"></i>
+        <h3>Total Payments</h3>
+        <p id="totalPayments">₹10000</p>
+      </div>
+      <div class="card">
+        <i class="fas fa-users"></i>
+        <h3>Customers</h3>
+        <p>87</p>
+      </div>
+      <div class="card">
+        <i class="fas fa-tshirt"></i>
+        <h3>Products Sold</h3>
+        <p id="productsSold">42</p>
+      </div>
+    </div>
+
+    <!-- Payment Summary -->
+    <div class="section">
+      <h2>Payment Summary</h2>
+      <table id="paymentTable">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Type</th>
+            <th>Amount</th>
+            <th>Method</th>
+            <th>Comment</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>15 Sep 2025</td>
+            <td class="credit">Credit</td>
+            <td class="credit">₹5000</td>
+            <td>UPI</td>
+            <td>Monthly subscription</td>
+          </tr>
+          <tr>
+            <td>14 Sep 2025</td>
+            <td class="debit">Debit</td>
+            <td class="debit">₹1200</td>
+            <td>Bank Transfer</td>
+            <td>Refund</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Add Payment -->
+    <div class="section">
+      <h2>Add Payment</h2>
+      <form id="paymentForm">
+        <div class="form-group"><label>Date</label><input type="date" id="payDate" required></div>
+        <div class="form-group"><label>Type</label>
+          <select id="payType" required>
+            <option value="">--Select--</option><option value="Credit">Credit</option><option value="Debit">Debit</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Amount (₹)</label><input type="number" id="payAmount" required></div>
+        <div class="form-group"><label>Method</label>
+          <select id="payMethod" required>
+            <option value="">--Select--</option><option>UPI</option><option>Bank Transfer</option><option>Card</option><option>Cash</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Comment</label><textarea id="payComment"></textarea></div>
+        <button type="submit" class="btn"><i class="fas fa-plus"></i> Add Payment</button>
+      </form>
+    </div>
+
+    <!-- Products Section -->
+    <div class="section">
+      <h2>Products Sold</h2>
+      <table id="productsTable">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Product</th>
+            <th>Qty</th>
+            <th>Price (₹)</th>
+            <th>Total (₹)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>12 Sep 2025</td>
+            <td>T-shirt</td>
+            <td>2</td>
+            <td>500</td>
+            <td>1000</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Add Product -->
+    <div class="section">
+      <h2>Add Product Sale</h2>
+      <form id="productForm">
+        <div class="form-group"><label>Date</label><input type="date" id="prodDate" required></div>
+        <div class="form-group"><label>Product Name</label><input type="text" id="prodName" required></div>
+        <div class="form-group"><label>Quantity</label><input type="number" id="prodQty" required></div>
+        <div class="form-group"><label>Price per Unit (₹)</label><input type="number" id="prodPrice" required></div>
+        <button type="submit" class="btn"><i class="fas fa-plus"></i> Add Product</button>
+      </form>
+    </div>
+
+  </div>
+
+  <script>
+    // Payment Section
+    const paymentForm = document.getElementById("paymentForm");
+    const paymentTable = document.getElementById("paymentTable").querySelector("tbody");
+    const totalPaymentsEl = document.getElementById("totalPayments");
+    let totalPayments = 10000;
+
+    paymentForm.addEventListener("submit", function(e) {
+      e.preventDefault();
+      const date = document.getElementById("payDate").value;
+      const type = document.getElementById("payType").value;
+      const amount = parseInt(document.getElementById("payAmount").value);
+      const method = document.getElementById("payMethod").value;
+      const comment = document.getElementById("payComment").value;
+      if(!date || !type || !amount || !method) return;
+      const row = document.createElement("tr");
+      row.innerHTML = `<td>${date}</td><td class="${type.toLowerCase()}">${type}</td><td class="${type.toLowerCase()}">₹${amount}</td><td>${method}</td><td>${comment}</td>`;
+      paymentTable.appendChild(row);
+      totalPayments += (type === "Credit" ? amount : -amount);
+      totalPaymentsEl.textContent = "₹" + totalPayments;
+      paymentForm.reset();
+    });
+
+    // Product Section
+    const productForm = document.getElementById("productForm");
+    const productsTable = document.getElementById("productsTable").querySelector("tbody");
+    const productsSoldEl = document.getElementById("productsSold");
+    let productsSold = 42;
+
+    productForm.addEventListener("submit", function(e) {
+      e.preventDefault();
+      const date = document.getElementById("prodDate").value;
+      const name = document.getElementById("prodName").value;
+      const qty = parseInt(document.getElementById("prodQty").value);
+      const price = parseInt(document.getElementById("prodPrice").value);
+      if(!date || !name || !qty || !price) return;
+      const total = qty * price;
+      const row = document.createElement("tr");
+      row.innerHTML = `<td>${date}</td><td>${name}</td><td>${qty}</td><td>${price}</td><td>${total}</td>`;
+      productsTable.appendChild(row);
+      productsSold += qty;
+      productsSoldEl.textContent = productsSold;
+      productForm.reset();
+    });
+  </script>
+</body>
+</html>
