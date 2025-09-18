@@ -1,0 +1,968 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Declare Variables T-Shirt — Zenvora</title>
+
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+ 
+<style>
+  :root{
+    --accent:#e53935; /* red */
+    --accent-dark:#b82828;
+    --accent-yellow:#ffb400;
+    --muted:#666;
+    --card:#fff;
+    --overlay: rgba(0,0,0,0.45);
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    background:#f5f5f5;
+    color:#222;
+  }
+
+  /* Top header */
+  .topbar{
+    background:#fff;
+    border-bottom:1px solid #eee;
+    padding:12px 18px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+  }
+  .brand{font-weight:700;letter-spacing:0.02em}
+  .view-cart-tab{
+    background:transparent;
+    border:none;
+    color:var(--accent);
+    font-weight:700;
+    cursor:pointer;
+    padding:8px 12px;
+    border-radius:8px;
+  }
+
+  /* Page layout (simple product area) */
+  .page-wrap{max-width:1100px;margin:18px auto;padding:0 16px;display:flex;gap:28px}
+  .left{flex:1}
+  .right{flex:1;max-width:460px}
+  .main-image{background:#fff;padding:18px;border-radius:10px;border:1px solid #eee;display:flex;align-items:center;justify-content:center}
+  .main-image img{max-width:100%;height:auto;border-radius:8px}
+  .thumbnails{display:flex;gap:10px;margin-top:10px}
+  .thumbnails img{width:72px;height:72px;object-fit:cover;border-radius:8px;border:1px solid transparent;cursor:pointer}
+  .thumbnails img.active{border-color:var(--accent-yellow)}
+
+  /* Product details on right */
+  h1{font-size:20px;margin:0 0 8px}
+  .price-row{display:flex;align-items:center;gap:12px;margin:12px 0}
+  .old-price{text-decoration:line-through;color:#888}
+  .sale-price{color:var(--accent);font-weight:800;font-size:20px}
+
+  .style-buttons button, .sizes button{
+    background:#fff;border:1px solid #ddd;padding:8px 12px;border-radius:8px;cursor:pointer;margin-right:8px;
+  }
+
+  .purchase-row{display:flex;align-items:center;gap:12px;margin-top:16px}
+  .qty{
+    display:flex;align-items:center;border:1px solid #ddd;border-radius:30px;overflow:hidden;
+  }
+  .qty button{border:none;background:white;padding:8px 12px;font-size:16px;cursor:pointer}
+  .qty .val{min-width:36px;text-align:center;font-weight:700}
+
+  .add-cart-btn{background:var(--accent);color:white;border:none;padding:12px 18px;border-radius:8px;cursor:pointer;font-weight:800}
+
+  /* Overlay + Sidebar cart */
+  .overlay{position:fixed;left:0;top:0;width:100%;height:100%;background:var(--overlay);opacity:0;pointer-events:none;transition:opacity .25s ease;z-index:200}
+  .overlay.active{opacity:1;pointer-events:auto}
+
+  .cart-sidebar{
+    position:fixed;right:-420px;top:0;height:100%;width:420px;background:var(--card);box-shadow:-8px 0 24px rgba(0,0,0,0.18);
+    transition:right .28s ease;z-index:300;display:flex;flex-direction:column;
+  }
+  .cart-sidebar.open{right:0}
+
+  .cart-header{padding:16px;border-bottom:1px solid #eee;display:flex;align-items:center;justify-content:space-between;font-weight:700}
+  .cart-close{background:transparent;border:none;font-size:20px;cursor:pointer;color:#222}
+
+  .offer-banner{margin:12px;padding:12px;border:2px dashed #cfcfcf;border-radius:8px;text-align:center;color:#333;font-weight:700}
+  .offer-banner b{color:var(--accent)}
+
+  .cart-items{padding:12px;overflow:auto;flex:1}
+
+  /* single cart item */
+  .cart-item{display:flex;gap:12px;padding:10px 6px;border-bottom:1px solid #f0f0f0;align-items:flex-start}
+  .cart-item .thumb{width:86px;height:86px;border-radius:8px;background:#fafafa;flex-shrink:0;display:flex;align-items:center;justify-content:center;overflow:hidden}
+  .cart-item img{width:100%;height:100%;object-fit:cover}
+  .item-meta{flex:1}
+  .item-title{font-weight:700;margin:0 0 6px;font-size:14px}
+  .item-variant{color:var(--muted);font-size:13px;margin-bottom:6px}
+  .price-row-sm{display:flex;gap:8px;align-items:center}
+  .old-sm{color:#999;text-decoration:line-through;font-size:13px}
+  .sale-sm{color:var(--accent);font-weight:800}
+
+  .item-controls{display:flex;align-items:center;gap:8px;margin-top:8px}
+  .icon-btn{background:#fff;border:1px solid #eee;padding:6px;border-radius:8px;cursor:pointer;width:36px;height:36px;display:inline-flex;align-items:center;justify-content:center}
+  .qty-mini{display:flex;border:1px solid #eee;border-radius:20px;overflow:hidden}
+  .qty-mini button{background:white;border:none;padding:6px 8px;cursor:pointer}
+  .qty-mini .v{padding:6px 10px;font-weight:700;display:inline-block}
+
+  /* coupon sticky */
+  .coupon-sticky{background:linear-gradient(90deg,#ffb84f,#ff9a00);color:#222;padding:10px 12px;border-radius:6px;margin:12px;display:flex;align-items:center;gap:10px;font-weight:700;position:relative}
+  .coupon-sticky small{font-weight:600}
+
+  .cart-footer{padding:14px;border-top:1px solid #eee}
+  .subtotal-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-size:18px;font-weight:800}
+  .foot-note{color:#777;font-size:13px;margin-bottom:12px}
+  .checkout-btn{display:block;width:100%;background:var(--accent);color:white;padding:12px;border-radius:8px;text-align:center;font-weight:800;border:none;cursor:pointer}
+
+  /* small screen: full width cart */
+  @media (max-width:480px){
+    .cart-sidebar{width:100%}
+  }
+  /* Existing CSS above remains same */
+
+/* ----------- Mobile responsive styles ----------- */
+@media (max-width:768px){
+  .page-wrap{
+    flex-direction:column;
+    gap:18px;
+  }
+  .left, .right{
+    max-width:100%;
+  }
+  .main-image{
+    padding:12px;
+  }
+  .thumbnails{
+    overflow-x:auto;
+    -webkit-overflow-scrolling:touch;
+    gap:8px;
+  }
+  .thumbnails img{
+    flex-shrink:0;
+  }
+  h1{
+    font-size:18px;
+  }
+  .sale-price{
+    font-size:18px;
+  }
+  .purchase-row{
+    flex-direction:column;
+    align-items:stretch;
+  }
+  .add-cart-btn{
+    width:100%;
+  }
+}
+
+/* Even smaller screens (phones) */
+@media (max-width:480px){
+  .topbar{
+    padding:10px 14px;
+  }
+  .brand{
+    font-size:18px;
+  }
+  .view-cart-tab{
+    font-size:14px;
+    padding:6px 10px;
+  }
+  .qty button{
+    padding:6px 10px;
+  }
+  .qty .val{
+    min-width:30px;
+  }
+  /* Cart full width */
+  .cart-sidebar{
+    width:100%;
+    right:-100%;
+  }
+  .cart-sidebar.open{
+    right:0;
+  }
+  .cart-item .thumb{
+    width:72px;
+    height:72px;
+  }
+}
+
+
+    footer {
+      background: linear-gradient(90deg, #8e3c61, #6b355c);
+      color: #fff;
+      padding: 50px 20px 20px;
+    }
+
+    .footer-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 40px;
+      max-width: 1200px;
+      margin: auto;
+    }
+
+    .footer-column h3 {
+      font-size: 18px;
+      margin-bottom: 15px;
+      font-weight: 600;
+    }
+
+    .footer-column ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .footer-column ul li {
+      margin: 8px 0;
+    }
+
+    .footer-column ul li a {
+      color: #ddd;
+      text-decoration: none;
+      font-size: 14px;
+      transition: color 0.3s ease;
+    }
+
+    .footer-column ul li a:hover {
+      color: #fff;
+    }
+
+    /* Email Signup */
+    .newsletter p {
+      font-size: 14px;
+      margin-bottom: 15px;
+      color: #ddd;
+    }
+
+    .newsletter form {
+      display: flex;
+      max-width: 320px;
+      background: #fff;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    .newsletter input {
+      flex: 1;
+      border: none;
+      padding: 12px;
+      font-size: 14px;
+      outline: none;
+    }
+
+    .newsletter button {
+      background: #5b224a;
+      color: #fff;
+      border: none;
+      padding: 12px 18px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background 0.3s;
+    }
+
+    .newsletter button:hover {
+      background: #451937;
+    }
+
+    /* Bottom Bar */
+    .footer-bottom {
+      border-top: 1px solid rgba(255, 255, 255, 0.2);
+      margin-top: 30px;
+      padding-top: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      font-size: 13px;
+      color: #ddd;
+    }
+
+    .payment-icons i {
+      font-size: 26px;
+      margin: 0 8px;
+      color: #fff;
+    }
+
+    /* Scroll to top button */
+    .scroll-top {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #fff;
+      color: #5b224a;
+      border-radius: 50%;
+      padding: 12px;
+      font-size: 18px;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+      transition: 0.3s;
+    }
+
+    .scroll-top:hover {
+      background: #f4f4f4;
+    }
+
+
+    .features {
+      display: flex;
+      justify-content: space-around;
+      align-items: flex-start;
+      padding: 40px 20px;
+      background: linear-gradient(90deg, #b24592, #f15f79);
+      color: white;
+      flex-wrap: wrap;
+      text-align: left;
+    }
+
+    .feature {
+      flex: 1 1 220px;
+      max-width: 260px;
+      margin: 20px;
+      display: flex;
+      align-items: flex-start;
+      gap: 15px;
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.6s ease;
+    }
+
+    .feature.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .feature i {
+      font-size: 28px;
+      min-width: 30px;
+      color: #fff;
+    }
+
+    .feature h3 {
+      margin: 0 0 8px;
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .feature p {
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.5;
+      opacity: 0.9;
+    }
+
+    @media (max-width: 768px) {
+      .features {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+
+      .feature {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+    }
+  
+    /* Navbar */
+    nav {
+      background: #fff;
+      border-bottom: 1px solid #eee;
+      position: fixed; 
+      top: 0; 
+      left: 0;
+      width: 100%;
+      z-index: 1000;
+    }
+
+    .nav-top {
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center;
+      padding: 12px 40px;
+    }
+
+    /* Links */
+    .nav-links {display: flex; gap: 25px;}
+    .nav-links a {
+      text-decoration: none; color: #111; font-size: 16px; font-weight: 500;
+      transition: color 0.3s;
+    }
+    .nav-links a:hover {color: #a44b63;}
+
+    /* Logo */
+    .logo {font-size: 22px; font-weight: 700; color: #a44b63;}
+    .logo span {color: #333; font-weight: 500;}
+
+    /* Right icons */
+    .nav-icons {display: flex; gap: 20px; align-items: center;}
+    .nav-icons i {
+      font-size: 20px; cursor: pointer; transition: transform 0.2s, color 0.3s;
+    }
+    .nav-icons i:hover {transform: scale(1.2); color: #a44b63;}
+
+    /* Cart */
+    .cart {position: relative;}
+    .cart span {
+      position: absolute; top: -8px; right: -10px;
+      background: #a44b63; color: white; font-size: 12px;
+      padding: 2px 6px; border-radius: 50%;
+    }
+
+    /* Hamburger */
+    .hamburger {display: none; font-size: 22px; cursor: pointer;}
+
+    /* Search Bar */
+    .search-bar {
+      position: fixed;
+      top: 60px;
+      left: 50%;
+      transform: translateX(-50%) scaleY(0);
+      width: 90%;
+      max-width: 500px;
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 25px;
+      padding: 8px 15px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: transform 0.3s ease;
+      z-index: 1200;
+    }
+    .search-bar.active {transform: translateX(-50%) scaleY(1);}
+    .search-bar input {
+      border: none; outline: none; flex: 1;
+      font-size: 14px; padding: 6px;
+    }
+    .search-bar button {
+      background: #a44b63; color: #fff; border: none;
+      padding: 6px 12px; border-radius: 20px; font-size: 14px; cursor: pointer;
+    }
+    .search-bar button:hover {background: #902d4e;}
+
+    /* Sidebar */
+    .sidebar {
+      position: fixed; top: 0; left: -280px;
+      width: 280px; height: 100%; background: #fff;
+      box-shadow: 2px 0 10px rgba(0,0,0,0.15);
+      padding: 70px 25px;
+      transition: left 0.4s ease;
+      z-index: 2000; overflow-y: auto;
+    }
+    .sidebar.active {left: 0;}
+    
+    .sidebar a {
+      display: block; margin: 18px 0; text-decoration: none;
+      color: #333; font-size: 18px; font-weight: 500;
+      opacity: 0; transform: translateX(-20px);
+      transition: all 0.4s ease;
+    }
+    .sidebar.active a {opacity: 1; transform: translateX(0);}
+    .sidebar a:hover {color: #a44b63;}
+
+    /* Categories Section Sidebar */
+    .categories {margin-top: 30px; border-top: 1px solid #eee; padding-top: 20px;}
+    .categories h3 {
+      font-size: 16px; color: #a44b63;
+      margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px;
+    }
+    .categories a {
+      font-size: 16px; color: #444; margin: 12px 0;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .categories a i {color: #a44b63;}
+    .categories a:hover {color: #a44b63;}
+
+    /* Overlay */
+    .overlay {
+      display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.5); z-index: 1500;
+    }
+    .overlay.active {display: block;}
+
+    /* Category Scroll Bar (inside navbar) */
+    .category-bar {
+      display: flex; 
+      gap: 30px; 
+      overflow-x: auto;
+      white-space: nowrap;
+      padding: 10px 20px;
+      background: #fafafa;
+      border-top: 1px solid #eee;
+      scrollbar-width: none;
+    }
+    .category-bar::-webkit-scrollbar {display: none;}
+    .category-bar a {
+      text-decoration: none; 
+      color: #444; 
+      font-size: 15px; 
+      font-weight: 500;
+      display: inline-flex; 
+      align-items: center; 
+      gap: 8px;
+      transition: color 0.3s;
+      padding: 6px 10px;
+    }
+    .category-bar a i {color: #a44b63;}
+    .category-bar a:hover {color: #a44b63;}
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .nav-links {display: none;}
+      .hamburger {display: block;}
+    }
+
+    body {padding-top: 110px;} /* to push content below navbar */
+  </style>
+
+</head>
+<body>
+
+<!-- Navbar -->
+<nav>
+  <!-- Top Navbar -->
+  <div class="nav-top">
+    <div class="hamburger"><i class="fas fa-bars"></i></div>
+    <div class="nav-links">
+      <a href="#">Women</a>
+      <a href="#">Men</a>
+      <a href="#">Contact Us</a>
+    </div>
+    <div class="logo">Zen<span>vora</span></div>
+    <div class="nav-icons">
+      <i class="fas fa-search" id="searchIcon"></i>
+      <i class="fas fa-user"></i>
+
+      <!-- Cart Icon -->
+      <div class="cart" onclick="openCart()">
+        <i class="fas fa-shopping-bag"></i>
+        <span>0</span>
+      </div>
+    </div>
+  </div>
+
+  
+    </div>
+    <!-- Scroll Category Bar -->
+    <div class="category-bar">
+      <a href="#"><i class="fas fa-tshirt"></i> T-Shirts</a>
+      <a href="#"><i class="fas fa-mug-hot"></i> Mugs</a>
+      <a href="#"><i class="fas fa-mobile-alt"></i> Mobile Covers</a>
+      <a href="#"><i class="fas fa-image"></i> Photo Frames</a>
+      <a href="#"><i class="fas fa-link"></i> Chains</a>
+      <a href="#"><i class="fas fa-star"></i> New Arrivals</a>
+      <a href="#"><i class="fas fa-gift"></i> Gift Ideas</a>
+    </div>
+  </nav>
+
+  <!-- Search Bar -->
+  <div class="search-bar" id="searchBar">
+    <input type="text" placeholder="Search products...">
+    <button><i class="fas fa-search"></i></button>
+  </div>
+
+  <!-- Sidebar (Mobile) -->
+  <div class="sidebar" id="sidebar">
+    <a href="#">Women</a>
+    <a href="#">Men</a>
+    <a href="#">Contact Us</a>
+    <a href="#">Login</a>
+    <a href="#">Cart</a>
+
+    <div class="categories">
+      <h3>Shop by Category</h3>
+      <a href="#"><i class="fas fa-tshirt"></i> T-Shirts</a>
+      <a href="#"><i class="fas fa-mug-hot"></i> Mugs</a>
+      <a href="#"><i class="fas fa-mobile-alt"></i> Mobile Covers</a>
+      <a href="#"><i class="fas fa-image"></i> Photo Frames</a>
+      <a href="#"><i class="fas fa-link"></i> Chains</a>
+      <a href="#"><i class="fas fa-star"></i> New Arrivals</a>
+      <a href="#"><i class="fas fa-gift"></i> Gift Ideas</a>
+    </div>
+  </div>
+
+  <!-- Overlay -->
+  <div class="overlay" id="overlay"></div>
+<!-- main content: product simplified (so add to cart works) -->
+<div class="page-wrap">
+  <div class="left">
+    <div class="main-image">
+      <img id="productImg" src="https://www.dudeme.in/cdn/shop/products/Declare-variables-MELANGE.jpg?v=1661775148&width=600" alt="Declare Variables T-Shirt">
+    </div>
+    <div class="thumbnails" style="margin-top:8px">
+      <img src="https://www.dudeme.in/cdn/shop/products/Declare-variables-MELANGE.jpg?v=1661775148&width=600" class="active" onclick="changeMain(this)">
+      <img src="https://www.dudeme.in/cdn/shop/products/Declare-variables-NAVY.jpg?v=1661775148&width=600" onclick="changeMain(this)">
+    </div>
+  </div>
+
+  <div class="right">
+    <h1>Declare Variables not War — Half Sleeve Unisex</h1>
+    <div class="price-row">
+      <div class="old-price">₹1,199.00</div>
+      <div class="sale-price">₹599.00</div>
+    </div>
+
+    <div style="margin:12px 0">
+      <div style="font-weight:700;margin-bottom:6px">CHOOSE SIZE</div>
+      <div class="sizes">
+        <button data-size="XS" class="size-btn active" onclick="pickSize(this)">XS</button>
+        <button data-size="S" class="size-btn" onclick="pickSize(this)">S</button>
+        <button data-size="M" class="size-btn" onclick="pickSize(this)">M</button>
+        <button data-size="L" class="size-btn" onclick="pickSize(this)">L</button>
+      </div>
+    </div>
+
+    <div class="purchase-row">
+      <div class="qty">
+        <button onclick="changeQty(-1)">−</button>
+        <div class="val" id="pageQty">1</div>
+        <button onclick="changeQty(1)">+</button>
+      </div>
+      <button class="add-cart-btn" onclick="addToCart()">ADD TO CART</button>
+    </div>
+  </div>
+</div>
+
+<!-- Overlay and sidebar cart -->
+<div id="overlay" class="overlay" onclick="closeCart()"></div>
+
+<aside id="cartSidebar" class="cart-sidebar" aria-hidden="true">
+  <div class="cart-header">
+    <div>SHOPPING CART</div>
+    <button class="cart-close" onclick="closeCart()" aria-label="Close">✕</button>
+  </div>
+
+  <div style="padding:12px">
+    <div class="offer-banner">Buy Any 2 &amp; Get <span style="color:var(--accent)">15% Offer</span> — Use Code: <b>BUY2</b></div>
+  </div>
+
+  <div class="cart-items" id="cartItems">
+    <!-- JS will render items here -->
+  </div>
+
+  <div>
+    <div class="coupon-sticky">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" style="opacity:.95"><path d="M3 11V3h8l10 10-8 8L3 11z" fill="#fff"/></svg>
+      <div>Checkout now to claim your coupon</div>
+    </div>
+  </div>
+
+  <div class="cart-footer">
+    <div class="subtotal-row">
+      <div>Subtotal:</div>
+      <div id="subtotalAmt">₹0</div>
+    </div>
+    <div class="foot-note">Safe Shipping | Secure Payments<br/>Loved By 1M+ People</div>
+    <button class="checkout-btn" onclick="checkout()">CHECK OUT</button>
+  </div>
+</aside>
+
+
+
+
+
+
+
+  <section class="features">
+    <div class="feature">
+      <i class="fa-solid fa-gem"></i>
+      <div>
+        <h3>High Quality Products</h3>
+        <p>Crafted to Perfection – Unmatched Quality, Just for You!</p>
+      </div>
+    </div>
+
+    <div class="feature">
+      <i class="fa-solid fa-gift"></i>
+      <div>
+        <h3>Free Gift Box</h3>
+        <p>Enjoy free gift box. Surprise your loved ones in style!</p>
+      </div>
+    </div>
+
+    <div class="feature">
+      <i class="fa-solid fa-truck-fast"></i>
+      <div>
+        <h3>Free Shipping</h3>
+        <p>No Extra Costs – Beautiful Jewelry Delivered Free!</p>
+      </div>
+    </div>
+
+    <div class="feature">
+      <i class="fa-solid fa-wallet"></i>
+      <div>
+        <h3>Cash on Delivery</h3>
+        <p>Shop Now, Pay Later – Hassle-Free COD Experience!</p>
+      </div>
+    </div>
+  </section>
+
+ 
+
+
+  <footer>
+    <div class="footer-container">
+      <!-- Quick Links -->
+      <div class="footer-column">
+        <h3>Quick Links</h3>
+        <ul>
+          <li><a href="#">Return Policy</a></li>
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Shipping Policy</a></li>
+          <li><a href="#">Terms of Service</a></li>
+          <li><a href="#">Contact Us</a></li>
+          <li><a href="#">Track Your Order</a></li>
+        </ul>
+      </div>
+
+      <!-- Our Collection -->
+      <div class="footer-column">
+        <h3>Our Collection</h3>
+        <ul>
+          <li><a href="#">Customize Jewelry</a></li>
+          <li><a href="#">Engraved Jewelry</a></li>
+          <li><a href="#">Koran Jewelry</a></li>
+          <li><a href="#">Best Seller</a></li>
+          <li><a href="#">New Arrival</a></li>
+        </ul>
+      </div>
+
+      <!-- Newsletter -->
+      <div class="footer-column newsletter">
+        <h3>Sign Up for Email</h3>
+        <p>Sign up to get first dibs on new arrivals, sales, exclusive content, events and more!</p>
+        <form>
+          <input type="email" placeholder="Enter email address">
+          <button type="submit">Subscribe <i class="fa-solid fa-arrow-right"></i></button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Bottom -->
+    <div class="footer-bottom">
+      <p>© 2025 Zenvora. All rights reserved.</p>
+      <div class="payment-icons">
+        <i class="fa-brands fa-cc-visa"></i>
+        <i class="fa-brands fa-cc-paypal"></i>
+        <i class="fa-brands fa-cc-mastercard"></i>
+        <i class="fa-brands fa-cc-amex"></i>
+        <i class="fa-brands fa-cc-discover"></i>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scroll to Top -->
+  <div class="scroll-top" onclick="window.scrollTo({top:0, behavior:'smooth'})">
+    <i class="fa-solid fa-chevron-up"></i>
+  </div>
+
+
+<script>
+  /* ---------- Utilities ---------- */
+  function moneyINR(num){
+    return Number(num).toLocaleString('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 2 });
+  }
+
+  /* ---------- Demo product page state ---------- */
+  let pageQty = 1;
+  let selectedSize = 'XS';
+
+  function changeMain(el){
+    document.querySelectorAll('.thumbnails img').forEach(i=>i.classList.remove('active'));
+    el.classList.add('active');
+    document.getElementById('productImg').src = el.src;
+  }
+  function pickSize(btn){
+    document.querySelectorAll('.size-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    selectedSize = btn.dataset.size;
+  }
+  function changeQty(delta){
+    pageQty = Math.max(1, pageQty + delta);
+    document.getElementById('pageQty').textContent = pageQty;
+  }
+
+  /* ---------- Cart (localStorage) ---------- */
+  const CART_KEY = 'cart';
+
+  function getCart(){
+    try{ return JSON.parse(localStorage.getItem(CART_KEY)) || []; }
+    catch(e){ return []; }
+  }
+  function saveCart(cart){
+    localStorage.setItem(CART_KEY, JSON.stringify(cart));
+    renderCart();
+  }
+
+  function addToCart(){
+    const product = {
+      id: Date.now().toString(36) + Math.floor(Math.random()*1000),
+      title: "Declare Variables not War Half Sleeve Unisex T-Shirt",
+      price: 599,
+      oldPrice: 1199,
+      qty: pageQty,
+      size: selectedSize,
+      color: "Navy",
+      img: document.getElementById('productImg').src
+    };
+
+    const cart = getCart();
+    const same = cart.find(i => i.title===product.title && i.size===product.size && i.color===product.color);
+    if(same){ same.qty = same.qty + product.qty; }
+    else{ cart.push(product); }
+    saveCart(cart);
+    openCart(); // auto open to show user
+  }
+
+  function removeItem(id){
+    let cart = getCart();
+    cart = cart.filter(i=>i.id!==id);
+    saveCart(cart);
+  }
+
+  function changeItemQty(id, delta){
+    const cart = getCart();
+    const item = cart.find(i=>i.id===id);
+    if(!item) return;
+    item.qty = Math.max(1, item.qty + delta);
+    saveCart(cart);
+  }
+
+  function editItem(id){
+    const cart = getCart();
+    const item = cart.find(i=>i.id===id);
+    if(!item) return;
+    const newSize = prompt("Change size (XS, S, M, L, XL)", item.size);
+    if(newSize){
+      item.size = newSize.trim().toUpperCase();
+      saveCart(cart);
+    }
+  }
+
+  function calcSubtotal(){
+    const cart = getCart();
+    let sum = 0;
+    cart.forEach(i => sum += (i.price * i.qty));
+    return sum;
+  }
+
+  function renderCart(){
+    const container = document.getElementById('cartItems');
+    container.innerHTML = '';
+    const cart = getCart();
+
+    if(cart.length===0){
+      container.innerHTML = '<div style="padding:24px;color:#777;text-align:center">Your cart is empty.</div>';
+    } else {
+      cart.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'cart-item';
+        div.innerHTML = `
+          <div class="thumb"><img src="${item.img}" alt=""></div>
+          <div class="item-meta">
+            <div class="item-title">${escapeHtml(item.title)}</div>
+            <div class="item-variant">${escapeHtml(item.color)} / ${escapeHtml(item.size)}</div>
+            <div class="price-row-sm">
+              <div class="old-sm">${moneyINR(item.oldPrice)}</div>
+              <div class="sale-sm">${moneyINR(item.price)}</div>
+            </div>
+
+            <div class="item-controls">
+              <div class="qty-mini">
+                <button onclick="changeItemQty('${item.id}', -1)">−</button>
+                <div class="v">${item.qty}</div>
+                <button onclick="changeItemQty('${item.id}', 1)">+</button>
+              </div>
+
+              <button class="icon-btn" title="Edit" onclick="editItem('${item.id}')">✎</button>
+              <button class="icon-btn" title="Remove" onclick="removeItem('${item.id}')">🗑</button>
+            </div>
+          </div>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    document.getElementById('subtotalAmt').textContent = moneyINR(calcSubtotal());
+  }
+
+  function escapeHtml(str){
+    return String(str).replace(/[&<>"'`=\/]/g, function (s) {
+      return ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;','/':'&#x2F;','`':'&#x60;','=':'&#x3D;' })[s];
+    });
+  }
+
+  /* ---------- Cart open/close ---------- */
+  function openCart(){
+    document.getElementById('cartSidebar').classList.add('open');
+    document.getElementById('overlay').classList.add('active');
+    renderCart();
+  }
+  function closeCart(){
+    document.getElementById('cartSidebar').classList.remove('open');
+    document.getElementById('overlay').classList.remove('active');
+  }
+
+  /* ---------- Checkout (redirect) ---------- */
+  function checkout(){
+    // Close sidebar (optional) then redirect to checkout page
+    closeCart();
+    // redirect to checkout page (no alert)
+    window.location.href = 'cart.html';
+  }
+
+  /* initialize */
+  document.addEventListener('DOMContentLoaded', function(){
+    renderCart();
+  });
+
+  // update if cart changed in other tab
+  window.addEventListener('storage', function(e){
+    if(e.key === CART_KEY) renderCart();
+  });
+
+
+    // Scroll animation
+    const features = document.querySelectorAll('.feature');
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('show');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.2 });
+
+    features.forEach(f => observer.observe(f));
+ 
+    const hamburger = document.querySelector('.hamburger');
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('overlay');
+    const searchIcon = document.getElementById('searchIcon');
+    const searchBar = document.getElementById('searchBar');
+
+    hamburger.addEventListener('click', () => {
+      sidebar.classList.toggle('active');
+      overlay.classList.toggle('active');
+    });
+
+    overlay.addEventListener('click', () => {
+      sidebar.classList.remove('active');
+      overlay.classList.remove('active');
+      searchBar.classList.remove('active');
+    });
+
+    searchIcon.addEventListener('click', () => {
+      searchBar.classList.toggle('active');
+    });
+  </script>
+</body>
+</html>

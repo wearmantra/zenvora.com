@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zenvora - Orders Panel</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: #f4f6f9;
+        margin: 0;
+        padding: 20px;
+    }
+    h1 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        background: white;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        border-radius: 8px;
+        overflow: hidden;
+    }
+    th, td {
+        padding: 12px;
+        border-bottom: 1px solid #ddd;
+        text-align: left;
+    }
+    th {
+        background: #ff6f00;
+        color: white;
+    }
+    tr:hover {
+        background: #fcefdc;
+    }
+    select {
+        padding: 5px;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+    }
+</style>
+</head>
+<body>
+
+<h1>Orders Panel</h1>
+<table>
+    <thead>
+        <tr>
+            <th>Order ID</th>
+            <th>Customer</th>
+            <th>Mobile</th>
+            <th>Address</th>
+            <th>Items</th>
+            <th>Total (₹)</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody id="ordersTable"></tbody>
+</table>
+
+<script>
+    // Dummy data for testing
+    if(!localStorage.getItem('orders')) {
+        const sampleOrders = [
+            {
+                id: 'ORD001',
+                fullname: 'Rahul Sharma',
+                mobile: '9876543210',
+                address: '123, MG Road, Delhi',
+                items: 'T-Shirt (M), Mug',
+                total: 750,
+                status: 'Pending'
+            },
+            {
+                id: 'ORD002',
+                fullname: 'Priya Verma',
+                mobile: '9876500000',
+                address: '45, Park Street, Mumbai',
+                items: 'Mobile Cover, Chain',
+                total: 1200,
+                status: 'Shipped'
+            }
+        ];
+        localStorage.setItem('orders', JSON.stringify(sampleOrders));
+    }
+
+    const orders = JSON.parse(localStorage.getItem('orders')) || [];
+    const ordersTable = document.getElementById('ordersTable');
+
+    function renderOrders() {
+        ordersTable.innerHTML = '';
+        orders.forEach((order, index) => {
+            ordersTable.innerHTML += `
+                <tr>
+                    <td>${order.id}</td>
+                    <td>${order.fullname}</td>
+                    <td>${order.mobile}</td>
+                    <td>${order.address}</td>
+                    <td>${order.items}</td>
+                    <td>${order.total}</td>
+                    <td>
+                        <select onchange="updateStatus(${index}, this.value)">
+                            <option value="Pending" ${order.status==='Pending'?'selected':''}>Pending</option>
+                            <option value="Shipped" ${order.status==='Shipped'?'selected':''}>Shipped</option>
+                            <option value="Delivered" ${order.status==='Delivered'?'selected':''}>Delivered</option>
+                        </select>
+                    </td>
+                </tr>
+            `;
+        });
+    }
+
+    function updateStatus(index, newStatus) {
+        orders[index].status = newStatus;
+        localStorage.setItem('orders', JSON.stringify(orders));
+        renderOrders();
+    }
+
+    renderOrders();
+</script>
+
+</body>
+</html>

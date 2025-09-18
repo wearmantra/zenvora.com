@@ -106,7 +106,89 @@
     .checkout:hover{background:#fdc830;color:#1e1f26;}
     .close-btn{background:none;border:none;font-size:20px;cursor:pointer;}
     .remove-btn{background:none;border:none;color:red;font-size:18px;cursor:pointer;position:absolute;right:0;top:0;}
-  </style>
+
+/* Footer */
+.footer {
+  background: #1e1f26;
+  color: #ddd;
+  padding: 0;   /* ✅ sab padding/margin remove */
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+}
+.footer-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(220px,1fr));
+  gap: 0;   /* ✅ columns ke beech ka gap bhi 0 */
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0;
+}
+.footer h4 {
+  font-size: 16px;
+  margin: 0 0 10px;
+  color: #fff;
+  font-weight: 600;
+}
+.footer p {
+  font-size: 14px;
+  margin: 0 0 8px;
+}
+.footer ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.footer ul li {
+  margin: 0 0 6px;
+}
+.footer ul li a {
+  color: #bbb;
+  font-size: 14px;
+  text-decoration: none;
+  transition: 0.3s;
+}
+.footer ul li a:hover {
+  color: #fdc830;
+}
+.footer-social {
+  display: flex;
+  gap: 5px;
+  margin: 0;
+}
+.footer-social a {
+  color: #ddd;
+  background: #333;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: 0.3s;
+}
+.footer-social a:hover {
+  background: #f37335;
+  color: #fff;
+}
+.payment-icons {
+  font-size: 26px;
+  display: flex;
+  gap: 8px;
+  color: #bbb;
+  margin: 0;
+}
+.payment-icons i:hover {
+  color: #fdc830;
+}
+.footer-bottom {
+  border-top: 1px solid #333;
+  text-align: center;
+  margin: 0;
+  padding: 8px 0;
+  font-size: 13px;
+  color: #aaa;
+}
+</style>
 </head>
 <body>
 
@@ -136,46 +218,110 @@
   <div class="logo"><h1>ZENV<span>ORA</span></h1></div>
 
   <!-- Products -->
-  <div class="section-title">OUR TOP PRODUCTS</div>
-  <div class="divider"></div>
-  <div class="products">
-    <div class="card">
+<div class="section-title">OUR TOP PRODUCTS</div>
+<div class="divider"></div>
+<div class="products">
+  <div class="card">
+    <a href="Declare Variables not War .html">
       <img src="https://www.dudeme.in/cdn/shop/products/Declare-variables-MELANGE.jpg?v=1661775148&width=600" alt="Custom T-Shirt">
-      <div class="card-body">
-        <h3>Custom T-Shirt</h3>
-        <p>High-quality cotton T-shirt with your own design.</p>
-        <div><span class="price">₹1199</span> <span class="sale-price">₹599</span></div>
-        <button class="add-cart">Add to Cart</button>
-      </div>
-    </div>
-    <div class="card">
-      <img src="https://www.dudeme.in/cdn/shop/products/1st-Rule-NAVY.jpg?v=1661942569&width=600" alt="Photo Frame">
-      <div class="card-body">
-        <h3>Photo Frame</h3>
-        <p>Elegant frames to showcase your precious memories.</p>
-        <div><span class="price">₹999</span> <span class="sale-price">₹499</span></div>
-        <button class="add-cart">Add to Cart</button>
-      </div>
-    </div>
-    <div class="card">
-      <img src="https://www.dudeme.in/cdn/shop/products/Programmer-life-BLACK.jpg?v=1661840058&width=600" alt="Mobile Case">
-      <div class="card-body">
-        <h3>Mobile Case</h3>
-        <p>Durable phone covers customized with your favorite images.</p>
-        <div><span class="price">₹799</span> <span class="sale-price">₹399</span></div>
-        <button class="add-cart">Add to Cart</button>
-      </div>
-    </div>
-    <div class="card">
-      <img src="https://www.dudeme.in/cdn/shop/products/While-Alive-eat-sleep-BLACK.jpg?v=1661945011&width=600" alt="Customized Chain">
-      <div class="card-body">
-        <h3>Code Half Sleeve Unisex T-Shirt</h3>
-        <p>While Alive Eat Sleep Code Half Sleeve Unisex T-Shirt</p>
-        <div><span class="price">₹1499</span> <span class="sale-price">₹599</span></div>
-        <button class="add-cart">Add to Cart</button>
-      </div>
+    </a>
+    <div class="card-body">
+      <h3>Declare Variables not War — Half Sleeve Unisex</h3>
+      <p>High-quality cotton T-shirt with your own design.</p>
+      <div><span class="price">₹1199</span> <span class="sale-price">₹599</span></div>
+      <button class="add-cart">Add to Cart</button>
     </div>
   </div>
+
+  <div class="card">
+    <a href="product2.html">
+      <img src="https://www.dudeme.in/cdn/shop/products/1st-Rule-NAVY.jpg?v=1661942569&width=600" alt="Photo Frame">
+    </a>
+    <div class="card-body">
+      <h3>If It Works Don't Touch Half Sleeve Unisex T-Shirt</h3>
+      <p>Elegant frames to showcase your precious memories.</p>
+      <div><span class="price">₹999</span> <span class="sale-price">₹499</span></div>
+      <button class="add-cart">Add to Cart</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <a href="product3.html">
+      <img src="https://www.dudeme.in/cdn/shop/products/Programmer-life-BLACK.jpg?v=1661840058&width=600" alt="Mobile Case">
+    </a>
+    <div class="card-body">
+      <h3>No Hugs & Kisses Only Bugs & Fixes Half Sleeve Unisex T-Shirt</h3>
+      <p>Durable phone covers customized with your favorite images.</p>
+      <div><span class="price">₹799</span> <span class="sale-price">₹399</span></div>
+      <button class="add-cart">Add to Cart</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <a href="product4.html">
+      <img src="https://www.dudeme.in/cdn/shop/products/While-Alive-eat-sleep-BLACK.jpg?v=1661945011&width=600" alt="Customized Chain">
+    </a>
+    <div class="card-body">
+      <h3>While Alive Eat Sleep Code Half Sleeve Unisex T-Shirt</h3>
+      <p>While Alive Eat Sleep Code Half Sleeve Unisex T-Shirt</p>
+      <div><span class="price">₹1499</span> <span class="sale-price"></span></div>
+      <button class="add-cart">Add to Cart</button>
+    </div>
+  </div>
+</div>
+<!-- Products -->
+
+<div class="divider"></div>
+<div class="products">
+  <div class="card">
+    <a href="product1.html">
+      <img src="https://www.dudeme.in/cdn/shop/products/Navy_af2b9b72-aded-42c1-b6eb-ca4480e06915.jpg?v=1648016158&width=400" alt="Custom T-Shirt">
+    </a>
+    <div class="card-body">
+      <h3>I Need a HUGe Amount Of Money Unisex Half Sleeve T-Shirt</h3>
+      <p>Buy with Buddies Dudeme Clearance Store M Exclusive Themes Geek T-Shirts</p>
+      <div><span class="price">₹1199</span> <span class="sale-price">₹599</span></div>
+      <button class="add-cart">Add to Cart</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <a href="product2.html">
+      <img src="https://www.dudeme.in/cdn/shop/products/Eat-Sleep-code-repeat-NAVY.jpg?v=1661924952&width=600" alt="Photo Frame">
+    </a>
+    <div class="card-body">
+      <h3>Eat Sleep Code Repeat Half Sleeve Unisex T-Shirt</h3>
+      <p>Elegant frames to showcase your precious memories.</p>
+      <div><span class="price">₹999</span> <span class="sale-price">₹499</span></div>
+      <button class="add-cart">Add to Cart</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <a href="product3.html">
+      <img src="https://www.dudeme.in/cdn/shop/products/It_s-not-a-bug-BLACK.jpg?v=1661944696&width=400" alt="Mobile Case">
+    </a>
+    <div class="card-body">
+      <h3>It's Not A Bug Half Sleeve Unisex T-Shirt</h3>
+      <p>Durable phone covers customized with your favorite images.</p>
+      <div><span class="price">₹799</span> <span class="sale-price">₹399</span></div>
+      <button class="add-cart">Add to Cart</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <a href="product4.html">
+      <img src="https://www.dudeme.in/cdn/shop/products/I-am-Offline-NAVY.jpg?v=1661939137&width=600" alt="Customized Chain">
+    </a>
+    <div class="card-body">
+      <h3>I Am Offline Half Sleeve Unisex T-Shirt</h3>
+      <p>While Alive Eat Sleep Code Half Sleeve Unisex T-Shirt</p>
+      <div><span class="price">₹1499</span> <span class="sale-price"></span></div>
+      <button class="add-cart">Add to Cart</button>
+    </div>
+  </div>
+</div>
+
 
   <!-- Overlay -->
   <div class="overlay" id="overlay" onclick="closeCart()"></div>
@@ -193,6 +339,74 @@
     </div>
   </div>
 
+
+<!-- Footer Section -->
+<footer class="footer">
+  <div class="footer-container">
+
+    <!-- About -->
+    <div class="footer-col">
+      <h4>ZENVORA</h4>
+      <p>Your one-stop solution for premium custom prints & group store management.</p>
+      <div class="footer-social">
+        <a href="#"><i class="fab fa-facebook-f"></i></a>
+        <a href="#"><i class="fab fa-instagram"></i></a>
+        <a href="#"><i class="fab fa-twitter"></i></a>
+        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+      </div>
+    </div>
+
+    <!-- Quick Links -->
+    <div class="footer-col">
+      <h4>Quick Links</h4>
+      <ul>
+        <li><a href="prodct.html">Products</a></li>
+        <li><a href="#">Custom Prints</a></li>
+        <li><a href="#">How It Works</a></li>
+        <li><a href="#">Bulk Orders</a></li>
+        <li><a href="#">FAQ</a></li>
+      </ul>
+    </div>
+
+    <!-- Customer Service -->
+    <div class="footer-col">
+      <h4>Customer Service</h4>
+      <ul>
+        <li><a href="#">Shipping Policy</a></li>
+        <li><a href="#">Return & Refund</a></li>
+        <li><a href="#">Track Order</a></li>
+        <li><a href="#">Support</a></li>
+        <li><a href="#">Contact Us</a></li>
+      </ul>
+    </div>
+
+    <!-- Payment & Contact -->
+    <div class="footer-col">
+      <h4>We Accept</h4>
+      <div class="payment-icons">
+        <i class="fab fa-cc-visa"></i>
+        <i class="fab fa-cc-mastercard"></i>
+        <i class="fab fa-cc-paypal"></i>
+        <i class="fab fa-google-pay"></i>
+      </div>
+      <h4 style="margin-top:15px;">Contact</h4>
+      <p><i class="fas fa-phone"></i> +91 6264536204</p>
+      <p><i class="fas fa-envelope"></i> support@zenvora.com</p>
+    </div>
+
+  </div>
+
+  <div class="footer-bottom">
+    <p>© 2025 Zenvora. All Rights Reserved.</p>
+  </div>
+</footer>
+
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+
+
+  
 <script>
   const cartSidebar=document.getElementById('cartSidebar');
   const overlay=document.getElementById('overlay');
