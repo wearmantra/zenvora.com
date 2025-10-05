@@ -1,124 +1,273 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Zenvora - Orders Panel</title>
-<style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Zenvora - Orders Panel</title>
+
+  <!-- html2pdf.js CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+  <style>
     body {
-        font-family: Arial, sans-serif;
-        background: #f4f6f9;
-        margin: 0;
-        padding: 20px;
+      font-family: Arial, sans-serif;
+      background: #f4f6f9;
+      margin: 0;
+      padding: 20px;
     }
+
     h1 {
-        text-align: center;
-        margin-bottom: 20px;
+      text-align: center;
+      margin-bottom: 20px;
     }
+
     table {
-        width: 100%;
-        border-collapse: collapse;
-        background: white;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-        border-radius: 8px;
-        overflow: hidden;
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+      border-radius: 8px;
+      overflow: hidden;
     }
+
     th, td {
-        padding: 12px;
-        border-bottom: 1px solid #ddd;
-        text-align: left;
+      padding: 12px;
+      border-bottom: 1px solid #ddd;
+      text-align: left;
     }
+
     th {
-        background: #ff6f00;
-        color: white;
+      background: #ff6f00;
+      color: white;
     }
+
     tr:hover {
-        background: #fcefdc;
+      background: #fcefdc;
     }
-    select {
-        padding: 5px;
-        border-radius: 4px;
-        border: 1px solid #ccc;
+
+    select, button {
+      padding: 5px 10px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      margin-top: 5px;
     }
-</style>
+
+    button {
+      background-color: #ff6f00;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #e65c00;
+    }
+
+    .empty {
+      text-align: center;
+      padding: 40px;
+      font-size: 18px;
+      color: #888;
+    }
+
+    /* Hidden invoice template */
+    #invoiceTemplate {
+      display: none;
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      width: 600px;
+      margin: auto;
+      background: white;
+      border: 1px solid #ddd;
+    }
+
+    .invoice-header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .invoice-header h2 {
+      margin: 0;
+      color: #ff6f00;
+    }
+
+    .invoice-section {
+      margin-bottom: 15px;
+    }
+
+    .invoice-section strong {
+      display: inline-block;
+      width: 120px;
+    }
+
+    .invoice-items {
+      border-top: 1px solid #ddd;
+      border-bottom: 1px solid #ddd;
+      padding: 10px 0;
+    }
+
+    .invoice-items div {
+      display: flex;
+      justify-content: space-between;
+      padding: 4px 0;
+    }
+
+    .invoice-total {
+      text-align: right;
+      margin-top: 10px;
+    }
+
+    .invoice-footer {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 14px;
+      color: #666;
+    }
+  </style>
 </head>
 <body>
 
-<h1>Orders Panel</h1>
-<table>
-    <thead>
-        <tr>
-            <th>Order ID</th>
-            <th>Customer</th>
-            <th>Mobile</th>
-            <th>Address</th>
-            <th>Items</th>
-            <th>Total (₹)</th>
-            <th>Status</th>
-        </tr>
-    </thead>
-    <tbody id="ordersTable"></tbody>
+<h1>Zenvora - Orders Panel</h1>
+
+<table id="ordersTableWrapper" style="display:none;">
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Order ID</th>
+      <th>Customer</th>
+      <th>Mobile</th>
+      <th>Address</th>
+      <th>Items</th>
+      <th>Total (₹)</th>
+      <th>Date</th>
+      <th>Status / Bill</th>
+    </tr>
+  </thead>
+  <tbody id="ordersTable"></tbody>
 </table>
 
+<div class="empty" id="noOrders" style="display:none;">No orders found.</div>
+
+<!-- Hidden invoice template -->
+<div id="invoiceTemplate"></div>
+
 <script>
-    // Dummy data for testing
-    if(!localStorage.getItem('orders')) {
-        const sampleOrders = [
-            {
-                id: 'ORD001',
-                fullname: 'Rahul Sharma',
-                mobile: '9876543210',
-                address: '123, MG Road, Delhi',
-                items: 'T-Shirt (M), Mug',
-                total: 750,
-                status: 'Pending'
-            },
-            {
-                id: 'ORD002',
-                fullname: 'Priya Verma',
-                mobile: '9876500000',
-                address: '45, Park Street, Mumbai',
-                items: 'Mobile Cover, Chain',
-                total: 1200,
-                status: 'Shipped'
-            }
-        ];
-        localStorage.setItem('orders', JSON.stringify(sampleOrders));
+  let orders = JSON.parse(localStorage.getItem('orders')) || [];
+
+  const ordersTable = document.getElementById('ordersTable');
+  const ordersTableWrapper = document.getElementById('ordersTableWrapper');
+  const noOrders = document.getElementById('noOrders');
+  const invoiceTemplate = document.getElementById('invoiceTemplate');
+
+  // Default status + orderId setup
+  orders = orders.map((order, i) => {
+    if (!order.status) order.status = "Pending";
+    if (!order.orderId) order.orderId = "ZNV" + Date.now() + (i+1); // unique ID
+    return order;
+  });
+
+  function renderOrders() {
+    if (orders.length === 0) {
+      noOrders.style.display = 'block';
+      ordersTableWrapper.style.display = 'none';
+      return;
     }
 
-    const orders = JSON.parse(localStorage.getItem('orders')) || [];
-    const ordersTable = document.getElementById('ordersTable');
+    noOrders.style.display = 'none';
+    ordersTableWrapper.style.display = 'table';
+    ordersTable.innerHTML = '';
 
-    function renderOrders() {
-        ordersTable.innerHTML = '';
-        orders.forEach((order, index) => {
-            ordersTable.innerHTML += `
-                <tr>
-                    <td>${order.id}</td>
-                    <td>${order.fullname}</td>
-                    <td>${order.mobile}</td>
-                    <td>${order.address}</td>
-                    <td>${order.items}</td>
-                    <td>${order.total}</td>
-                    <td>
-                        <select onchange="updateStatus(${index}, this.value)">
-                            <option value="Pending" ${order.status==='Pending'?'selected':''}>Pending</option>
-                            <option value="Shipped" ${order.status==='Shipped'?'selected':''}>Shipped</option>
-                            <option value="Delivered" ${order.status==='Delivered'?'selected':''}>Delivered</option>
-                        </select>
-                    </td>
-                </tr>
-            `;
-        });
-    }
+    orders.forEach((order, index) => {
+      const customer = order.customer;
+      const itemNames = order.cart.map(item => `${item.title} (${item.qty})`).join(', ');
 
-    function updateStatus(index, newStatus) {
-        orders[index].status = newStatus;
-        localStorage.setItem('orders', JSON.stringify(orders));
-        renderOrders();
-    }
+      ordersTable.innerHTML += `
+        <tr>
+          <td>${index + 1}</td>
+          <td>${order.orderId}</td>
+          <td>${customer.fullname}</td>
+          <td>${customer.mobile}</td>
+          <td>${customer.address}, ${customer.city}, ${customer.state} - ${customer.pincode}</td>
+          <td>${itemNames}</td>
+          <td>₹${order.total}</td>
+          <td>${order.date}</td>
+          <td>
+            <select onchange="updateStatus(${index}, this.value)">
+              <option value="Pending" ${order.status === 'Pending' ? 'selected' : ''}>Pending</option>
+              <option value="Shipped" ${order.status === 'Shipped' ? 'selected' : ''}>Shipped</option>
+              <option value="Delivered" ${order.status === 'Delivered' ? 'selected' : ''}>Delivered</option>
+            </select>
+            <br/>
+            <button onclick="downloadBill(${index})">Download Bill</button>
+          </td>
+        </tr>
+      `;
+    });
 
+    localStorage.setItem('orders', JSON.stringify(orders));
+  }
+
+  function updateStatus(index, newStatus) {
+    orders[index].status = newStatus;
+    localStorage.setItem('orders', JSON.stringify(orders));
     renderOrders();
+  }
+
+  function downloadBill(index) {
+    const order = orders[index];
+    const customer = order.customer;
+    const items = order.cart;
+    const subtotal = parseFloat(order.total);
+    const gst = (subtotal * 0.05).toFixed(2);
+    const totalWithGST = (subtotal + parseFloat(gst)).toFixed(2);
+
+    // Create invoice HTML content
+    let invoiceHTML = `
+      <div class="invoice-header">
+        <h2>ZENVORA</h2>
+        <p>Invoice</p>
+      </div>
+
+      <div class="invoice-section"><strong>Order No:</strong> ${order.orderId}</div>
+      <div class="invoice-section"><strong>Name:</strong> ${customer.fullname}</div>
+      <div class="invoice-section"><strong>Mobile:</strong> ${customer.mobile}</div>
+      <div class="invoice-section"><strong>Address:</strong> ${customer.address}, ${customer.city}, ${customer.state} - ${customer.pincode}</div>
+      <div class="invoice-section"><strong>Date:</strong> ${order.date}</div>
+      <div class="invoice-section"><strong>Status:</strong> ${order.status}</div>
+
+      <div class="invoice-items">
+        ${items.map(item => `
+          <div><span>${item.title}</span><span>Qty: ${item.qty}</span></div>
+        `).join('')}
+      </div>
+
+      <div class="invoice-total"><strong>Subtotal:</strong> ₹${subtotal.toFixed(2)}</div>
+      <div class="invoice-total"><strong>GST (5%):</strong> ₹${gst}</div>
+      <div class="invoice-total"><strong>Total:</strong> ₹${totalWithGST}</div>
+
+      <div class="invoice-footer">Thank you for shopping with ZENVORA!</div>
+    `;
+
+    invoiceTemplate.innerHTML = invoiceHTML;
+
+    // Make invoice visible before rendering
+    invoiceTemplate.style.display = 'block';
+
+    const opt = {
+      margin:       0.5,
+      filename:     `Zenvora_Bill_${order.orderId}.pdf`,
+      image:        { type: 'jpeg', quality: 0.98 },
+      html2canvas:  { scale: 2 },
+      jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+    };
+
+    html2pdf().set(opt).from(invoiceTemplate).save().then(() => {
+      // Hide again after rendering
+      invoiceTemplate.style.display = 'none';
+    });
+  }
+
+  renderOrders();
 </script>
 
 </body>

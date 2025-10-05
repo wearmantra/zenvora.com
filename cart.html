@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Zenvora - Checkout</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
     body {
         font-family: Arial, sans-serif;
@@ -124,10 +125,10 @@
     function updateCartDisplay() {
         cartList.innerHTML = '';
         checkoutProductList.innerHTML = '';
-        let total = 0;
+        let subtotal = 0;
 
         cart.forEach((item, index) => {
-            total += item.price * item.qty;
+            subtotal += item.price * item.qty;
 
             cartList.innerHTML += `
                 <div class="cart-item">
@@ -155,8 +156,19 @@
             `;
         });
 
-        totalPrice.innerText = total;
-        checkoutTotalPrice.innerText = total;
+        let extra = subtotal * 0.05;
+        let total = subtotal + extra;
+
+        cartList.innerHTML += `<div class="total">Subtotal: ₹${subtotal}</div>
+                               <div class="total">+ 5% Fee: ₹${extra.toFixed(2)}</div>
+                               <div class="total">Total: ₹${total.toFixed(2)}</div>`;
+
+        checkoutProductList.innerHTML += `<div class="total">Subtotal: ₹${subtotal}</div>
+                                          <div class="total">+ 5% Fee: ₹${extra.toFixed(2)}</div>
+                                          <div class="total">Total: ₹${total.toFixed(2)}</div>`;
+
+        totalPrice.innerText = total.toFixed(2);
+        checkoutTotalPrice.innerText = total.toFixed(2);
         localStorage.setItem('cart', JSON.stringify(cart));
     }
 
@@ -173,6 +185,10 @@
         document.getElementById('checkoutForm').style.display = 'block';
     });
 
+    function generateOrderNumber() {
+        return 'ORD-' + Date.now();
+    }
+
     document.getElementById('customerForm').addEventListener('submit', function(e) {
         e.preventDefault();
         const formData = new FormData(this);
@@ -181,19 +197,51 @@
             customerData[key] = value;
         });
 
-        const total = parseInt(checkoutTotalPrice.innerText);
+        const total = parseFloat(checkoutTotalPrice.innerText);
+        const orderNumber = generateOrderNumber();
+
         let orders = JSON.parse(localStorage.getItem('orders')) || [];
         orders.push({
+            orderNumber: orderNumber,
             customer: customerData,
             cart: cart,
             total: total,
             date: new Date().toLocaleString()
         });
         localStorage.setItem('orders', JSON.stringify(orders));
-
         localStorage.removeItem('cart');
-        alert('Order placed successfully!');
-        window.location.href = "payment.html";
+
+        // ✅ PDF Generate using jsPDF
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        let y = 20;
+
+        doc.setFontSize(16);
+        doc.text("ZENVORA BILL", 80, y); y += 10;
+        doc.setFontSize(12);
+        doc.text(`Order Number: ${orderNumber}`, 20, y); y += 7;
+        doc.text(`Date: ${new Date().toLocaleString()}`, 20, y); y += 7;
+        doc.text(`Customer: ${customerData.fullname}`, 20, y); y += 7;
+        doc.text(`Email: ${customerData.email}`, 20, y); y += 7;
+        doc.text(`Mobile: ${customerData.mobile}`, 20, y); y += 7;
+        doc.text(`Address: ${customerData.address}, ${customerData.city}, ${customerData.state}, ${customerData.pincode}`, 20, y); y += 10;
+
+        doc.text("--------------------------------------------", 20, y); y += 10;
+
+        cart.forEach(item => {
+            doc.text(`${item.title} - ₹${item.price} x ${item.qty} = ₹${item.price * item.qty}`, 20, y);
+            y += 7;
+        });
+
+        y += 5;
+        doc.text(`Total (incl. 5% Fee): ₹${total}`, 20, y);
+
+        y += 15;
+        doc.text("Thank you for shopping with Zenvora!", 20, y);
+
+        doc.save(`Zenvora_Bill_${orderNumber}.pdf`);
+
+        document.body.innerHTML = "<h2 style='text-align:center'>Order placed successfully!</h2>";
     });
 
     if (cart.length > 0) {
